@@ -75,15 +75,22 @@ Dev Setup
 
     python3 -m venv venv
     source venv/bin/activate
-    pip install -r requirements.txt -e .
-    pre-commit install --install-hooks
+    make setup
+    make install-dev
+
+Testing
+---------
+
+.. code-block::
+
+    make test
 
 Packaging
 ---------
 
 .. code-block::
 
-    mkdir -p dist
-    rm -f dist/*
-    python3 -m build
-    python3 -m twine upload --repository testpypi dist/*.tar.gz dist/*.whl
+    make build
+    make upload-test
+
+once the package looks good, run `make upload`.
