@@ -18,7 +18,7 @@ then, add the app to `settings.py`:
 
     INSTALLED_APPS = [
         # ... other apps ...
-        "aetos",
+        "django_aetos",
         # ... other apps ...
     ]
 
@@ -52,8 +52,8 @@ Your `src/app/signals.py`:
     @receiver(collect_metrics, dispatch_uid='metric_universes_count')
     def metric_universes_count(sender, **kwargs):
         yield {
-            "name": f"universes_count",
-            "help": f"Total number of universes",
+            "name": "universes_count",
+            "help": "Total number of universes",
             "type": "counter",
             "value": 1,
         }
