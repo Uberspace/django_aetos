@@ -98,7 +98,7 @@ Packaging
 
     git pull
     make bump-version part=minor
-    git push main v$(bump-my-version show current_version)
+    git push origin main v$(bump-my-version show current_version)
 
 .. code-block::
 
