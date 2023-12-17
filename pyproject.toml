@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[tool.hatch.build]
+exclude = [
+  "/venv",
+]
+
+[project]
+name = "django_aetos"
+version = "0.0.1"
+dependencies = [
+]
+requires-python = ">=3.9"
+authors = [
+  {name = "uberspace.de", email = "hallo@uberspace.de"},
+]
+maintainers = [
+  {name = "uberspace.de", email = "hallo@uberspace.de"},
+]
+description = "Export Django monitoring metrics for prometheus.io"
+readme = "README.rst"
+license = {file = "LICENSE.txt"}
+keywords = [
+  "metrics",
+  "prometheus",
+  "exporter",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+]
+
+[project.urls]
+Homepage = "https://github.com/uberspace/django-aetos"
+Issues = "https://github.com/uberspace/django-aetos/issues"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "example_project.settings"
+pythonpath = "example_project"
+python_files = [
+  "test_*.py", "tests.py",]
+
+[tool.black]
+line-length = 100

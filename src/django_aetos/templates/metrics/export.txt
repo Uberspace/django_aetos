@@ -1,0 +1,8 @@
+{% autoescape off %}{% spaceless %}
+{% for metric in metrics %}
+{% if metric.add_help %}
+# HELP {{ metric.name_without_labels }} {{ metric.help }}
+# TYPE {{ metric.name_without_labels }} {{ metric.type }}
+{% endif %}
+{{ metric.name }} {{ metric.value }}{% endfor %}
+{% endspaceless %}{% endautoescape %}
