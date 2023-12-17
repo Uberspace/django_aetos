@@ -10,7 +10,7 @@ exclude = [
 
 [project]
 name = "django_aetos"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
 ]
 requires-python = ">=3.9"
