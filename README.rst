@@ -6,7 +6,13 @@ A Django app to expose metrics to be scraped by prometheus.io.
 Usage
 -----
 
-First, add the app to `settings.py`:
+First, install django-aetos:
+
+.. code-block:: python
+
+    pip install django-aetos
+
+then, add the app to `settings.py`:
 
 .. code-block:: python
 
@@ -27,7 +33,7 @@ and send requests to `/metrics` to Aetos in your `urls.py`:
         # ... your other patterns ...
     ]
 
-Then, add your own metrics. To do this, listen for the `collect_metrics` signal.
+Then, add your own metrics by listening for the `collect_metrics` signal.
 Refer to [the django docs](https://docs.djangoproject.com/en/dev/topics/signals/)
 on details how to do this.
 
