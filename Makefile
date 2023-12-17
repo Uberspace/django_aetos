@@ -32,7 +32,3 @@ PART ?= "minor"
 bump-version:
 	bump-my-version bump ${PART}
 	@echo now at version $$(bump-my-version show current_version)
-	# bump-my-version enforces a clean git workdir, so this is fine
-	git add .
-	git commit -m "v$$(bump-my-version show current_version)"
-	git tag v$$(bump-my-version show current_version)
