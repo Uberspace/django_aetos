@@ -22,6 +22,19 @@ then, add the app to `settings.py`:
         # ... other apps ...
     ]
 
+configure aetos in `settings.py`:
+
+.. code-block:: python
+
+    # on enabled ip allowlist with empty list, requests are denied 
+    AETOS_ENABLE_IP_ALLOWLIST = True
+    AETOS_IP_ALLOWLIST = ["127.0.0.1"]
+
+    # enables authentication via bearer token
+    # if enabled with empty list, requests are denied
+    AETOS_ENABLE_AUTH = True
+    AETOS_AUTH_TOKENS = ["ooy9Evuth0zahka"]
+
 and send requests to `/metrics` to Aetos in your `urls.py`:
 
 .. code-block:: python
