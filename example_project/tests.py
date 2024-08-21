@@ -25,18 +25,18 @@ def test_e2e(client):
 def test_settings():
     from django_aetos import app_settings
 
-    assert app_settings.ENABLE_IP_ALLOWLIST == True
+    assert app_settings.ENABLE_IP_ALLOWLIST
     assert app_settings.IP_ALLOWLIST == ["127.0.0.1"]
-    assert app_settings.ENABLE_AUTH == True
+    assert app_settings.ENABLE_AUTH
     assert app_settings.AUTH_TOKENLIST == ["AhGei6ohghooDae"]
 
 
 def test_settings_defaults():
     from django_aetos import app_settings
 
-    assert app_settings.ENABLE_IP_ALLOWLIST == False
+    assert not app_settings.ENABLE_IP_ALLOWLIST
     assert app_settings.IP_ALLOWLIST == []
-    assert app_settings.ENABLE_AUTH == False
+    assert not app_settings.ENABLE_AUTH
     assert app_settings.AUTH_TOKENLIST == []
 
 
