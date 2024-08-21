@@ -6,6 +6,7 @@ from django_aetos import app_settings
 
 from .signals import collect_metrics
 
+
 def collect_response():
     metrics = []
     known_metrics = set()
@@ -19,13 +20,14 @@ def collect_response():
                 metric["add_help"] = True
             known_metrics.add(metric["name_without_labels"])
             metrics.append(metric)
-    
+
     return metrics
 
+
 def check_auth(request):
-    ip_address = request.META['REMOTE_ADDR']
+    ip_address = request.META["REMOTE_ADDR"]
     allowed_ips = app_settings.IP_ALLOWLIST
-    
+
     if app_settings.ENABLE_IP_ALLOWLIST and ip_address in allowed_ips:
         return True
     elif not app_settings.ENABLE_IP_ALLOWLIST:
@@ -33,20 +35,22 @@ def check_auth(request):
     else:
         return False
 
+
 def check_ips(request):
     try:
-        authorization_header = request.META['HTTP_AUTHORIZATION']
+        authorization_header = request.META["HTTP_AUTHORIZATION"]
     except KeyError:
         authorization_header = ""
-    type, sep, token = authorization_header.partition(' ')
+    type, sep, token = authorization_header.partition(" ")
     allowed_tokens = app_settings.AUTH_TOKENLIST
-    
+
     if app_settings.ENABLE_AUTH and type == "Bearer" and token in allowed_tokens:
         return True
     elif not app_settings.ENABLE_AUTH:
         return True
     else:
         return False
+
 
 def export_metrics(request):
     if check_auth(request) and check_ips(request):
@@ -57,7 +61,7 @@ def export_metrics(request):
             content_type="text/plain",
         )
         response.content = re.sub(b"\n+", b"\n", response.content)
-        
+
         return response
     else:
         return HttpResponse(status=401)

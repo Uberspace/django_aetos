@@ -26,7 +26,7 @@ configure aetos in `settings.py`:
 
 .. code-block:: python
 
-    # on enabled ip allowlist with empty list, requests are denied 
+    # on enabled ip allowlist with empty list, requests are denied
     AETOS_ENABLE_IP_ALLOWLIST = True
     AETOS_IP_ALLOWLIST = ["127.0.0.1"]
 
