@@ -22,6 +22,21 @@ then, add the app to `settings.py`:
         # ... other apps ...
     ]
 
+configure aetos in `settings.py`:
+
+> ℹ️ **Important**: When using `django-aetos` in a project behind a reverse proxy, include [`django-xff`](https://pypi.org/project/django-xff/) in your project, so that a request's `REMOTE_ADDR` header gets rewritten to the correct client ip.
+
+.. code-block:: python
+
+    # on enabled ip allowlist with empty list, requests are denied
+    AETOS_ENABLE_IP_ALLOWLIST = True
+    AETOS_IP_ALLOWLIST = ["127.0.0.1"]
+
+    # enables authentication via bearer token
+    # if enabled with empty list, requests are denied
+    AETOS_ENABLE_AUTH = True
+    AETOS_AUTH_TOKENS = ["ooy9Evuth0zahka"]
+
 and send requests to `/metrics` to Aetos in your `urls.py`:
 
 .. code-block:: python
