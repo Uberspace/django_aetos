@@ -24,6 +24,8 @@ then, add the app to `settings.py`:
 
 configure aetos in `settings.py`:
 
+> ℹ️ **Important**: When using `django-aetos` in a project behind a reverse proxy, include [`django-xff`](https://pypi.org/project/django-xff/) in your project, so that a request's `REMOTE_ADDR` header gets rewritten to the correct client ip.
+
 .. code-block:: python
 
     # on enabled ip allowlist with empty list, requests are denied
