@@ -24,19 +24,19 @@ def collect_response():
     return metrics
 
 
-def check_auth(request):
+def check_ip(request):
     ip_address = request.META["REMOTE_ADDR"]
     allowed_ips = app_settings.IP_ALLOWLIST
 
-    if app_settings.ENABLE_IP_ALLOWLIST and ip_address in allowed_ips:
+    if app_settings.ENABLE_IP_ALLOWLIST is True and ip_address in allowed_ips:
         return True
-    elif not app_settings.ENABLE_IP_ALLOWLIST:
+    elif app_settings.ENABLE_IP_ALLOWLIST is False:
         return True
     else:
         return False
 
 
-def check_ips(request):
+def check_auth(request):
     try:
         authorization_header = request.META["HTTP_AUTHORIZATION"]
     except KeyError:
@@ -44,16 +44,18 @@ def check_ips(request):
     type, sep, token = authorization_header.partition(" ")
     allowed_tokens = app_settings.AUTH_TOKENLIST
 
-    if app_settings.ENABLE_AUTH and type == "Bearer" and token in allowed_tokens:
+    if app_settings.ENABLE_AUTH is True and type == "Bearer" and token in allowed_tokens:
         return True
-    elif not app_settings.ENABLE_AUTH:
+    elif app_settings.ENABLE_AUTH is False:
         return True
     else:
         return False
 
 
 def export_metrics(request):
-    if check_auth(request) and check_ips(request):
+    validated_ip = check_ip(request)
+    validated_auth = check_auth(request)
+    if validated_auth and validated_ip:
         response = render(
             request,
             "metrics/export.txt",
@@ -63,5 +65,9 @@ def export_metrics(request):
         response.content = re.sub(b"\n+", b"\n", response.content)
 
         return response
+    elif not validated_auth and validated_ip:
+        return HttpResponse("Invalid auth token", status=401)
+    elif validated_auth and not validated_ip:
+        return HttpResponse("IP not allowed", status=401)
     else:
-        return HttpResponse(status=401)
+        return HttpResponse("Invalid auth token and IP not allowed", status=401)

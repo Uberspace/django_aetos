@@ -51,6 +51,7 @@ def test_enable_allowed_ips(client):
 @override_settings(AETOS_ENABLE_IP_ALLOWLIST=True, AETOS_IP_ALLOWLIST=["255.0.0.1"])
 def test_enable_allowed_ips_not_allowed(client):
     resp = client.get("/metrics")
+    assert resp.content.decode() == "IP not allowed"
     assert resp.status_code == 401
 
 
@@ -65,6 +66,7 @@ def test_enable_auth(client):
 @override_settings(AETOS_ENABLE_AUTH=True, AETOS_AUTH_TOKENLIST=["aquee4ro4Theeth"])
 def test_enable_auth_token_not_allowed(client):
     resp = client.get("/metrics", headers={"Authorization": "Bearer wr0ngt0kenf"})
+    assert resp.content.decode() == "Invalid auth token"
     assert resp.status_code == 401
 
 
@@ -89,6 +91,7 @@ def test_enable_all(client):
 )
 def test_enable_all_wrong_ip(client):
     resp = client.get("/metrics", headers={"Authorization": "Bearer aquee4ro4Theeth"})
+    assert resp.content.decode() == "IP not allowed"
     assert resp.status_code == 401
 
 
@@ -101,6 +104,7 @@ def test_enable_all_wrong_ip(client):
 )
 def test_enable_all_wrong_token(client):
     resp = client.get("/metrics", headers={"Authorization": "Bearer wr0ngt0ken"})
+    assert resp.content.decode() == "Invalid auth token"
     assert resp.status_code == 401
 
 
@@ -113,6 +117,7 @@ def test_enable_all_wrong_token(client):
 )
 def test_enable_all_wrong_token_ip(client):
     resp = client.get("/metrics", headers={"Authorization": "Bearer wr0ngt0ken"})
+    assert resp.content.decode() == "Invalid auth token and IP not allowed"
     assert resp.status_code == 401
 
 
@@ -122,6 +127,7 @@ def test_enable_all_wrong_token_ip(client):
 )
 def test_enable_all_empty_ip(client):
     resp = client.get("/metrics", headers={"Authorization": "Bearer aquee4ro4Theeth"})
+    assert resp.content.decode() == "IP not allowed"
     assert resp.status_code == 401
 
 
@@ -131,6 +137,7 @@ def test_enable_all_empty_ip(client):
 )
 def test_enable_all_empty_token(client):
     resp = client.get("/metrics", headers={"Authorization": "Bearer aquee4ro4Theeth"})
+    assert resp.content.decode() == "Invalid auth token"
     assert resp.status_code == 401
 
 
@@ -138,6 +145,7 @@ def test_enable_all_empty_token(client):
 @override_settings(AETOS_ENABLE_IP_ALLOWLIST=True, AETOS_ENABLE_AUTH=True)
 def test_enable_all_empty_token_ip(client):
     resp = client.get("/metrics", headers={"Authorization": "Bearer aquee4ro4Theeth"})
+    assert resp.content.decode() == "Invalid auth token and IP not allowed"
     assert resp.status_code == 401
 
 
@@ -150,4 +158,5 @@ def test_enable_all_empty_token_ip(client):
 )
 def test_enable_all_wrong_auth_header(client):
     resp = client.get("/metrics", headers={"Authorization": "Basic aquee4ro4Theeth"})
+    assert resp.content.decode() == "Invalid auth token"
     assert resp.status_code == 401
