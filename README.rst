@@ -24,7 +24,7 @@ then, add the app to `settings.py`:
 
 configure aetos in `settings.py`:
 
-> ℹ️ **Important**: When using `django-aetos` in a project behind a reverse proxy, include [`django-xff`](https://pypi.org/project/django-xff/) in your project, so that a request's `REMOTE_ADDR` header gets rewritten to the correct client ip.
+    ℹ️ **Important**: When using `django-aetos` in a project behind a reverse proxy, include `django-xff <https://pypi.org/project/django-xff/>`_ in your project, so that a request's `REMOTE_ADDR` header gets rewritten to the correct client ip.
 
 .. code-block:: python
 
@@ -35,7 +35,7 @@ configure aetos in `settings.py`:
     # enables authentication via bearer token
     # if enabled with empty list, requests are denied
     AETOS_ENABLE_AUTH = True
-    AETOS_AUTH_TOKENS = ["ooy9Evuth0zahka"]
+    AETOS_AUTH_TOKENLIST = ["ooy9Evuth0zahka"]
 
 and send requests to `/metrics` to Aetos in your `urls.py`:
 
@@ -49,7 +49,7 @@ and send requests to `/metrics` to Aetos in your `urls.py`:
     ]
 
 Then, add your own metrics by listening for the `collect_metrics` signal.
-Refer to [the django docs](https://docs.djangoproject.com/en/dev/topics/signals/)
+Refer to `the django docs <https://docs.djangoproject.com/en/dev/topics/signals/>`_
 on details how to do this.
 
 Your signal handler can return multiple metrics, each represented as a dict
