@@ -5,14 +5,21 @@ from django.shortcuts import render
 from django_aetos import app_settings
 
 from .signals import collect_metrics
+from .signals import get_collectors_by_category
 
 
-def collect_response():
+def collect_response(category=None):
     metrics = []
     known_metrics = set()
 
-    for _, signal_metrics in collect_metrics.send(None):
-        for metric in signal_metrics:
+    if category:
+        collectors = get_collectors_by_category(category)
+        metric_sources = [collector(sender=None) for collector in collectors]
+    else:
+        metric_sources = [signal_metrics for _, signal_metrics in collect_metrics.send(None)]
+
+    for source in metric_sources:
+        for metric in source:
             assert metric.keys() == {"name", "help", "type", "value"}
             metric = metric.copy()
             metric["name_without_labels"] = metric["name"].partition("{")[0]
@@ -52,14 +59,14 @@ def check_auth(request):
         return False
 
 
-def export_metrics(request):
+def _export_metrics_response(request, category=None):
     validated_ip = check_ip(request)
     validated_auth = check_auth(request)
     if validated_auth and validated_ip:
         response = render(
             request,
             "metrics/export.txt",
-            context={"metrics": collect_response()},
+            context={"metrics": collect_response(category=category)},
             content_type="text/plain",
         )
         response.content = re.sub(b"\n+", b"\n", response.content)
@@ -71,3 +78,11 @@ def export_metrics(request):
         return HttpResponse("IP not allowed", status=401)
     else:
         return HttpResponse("Invalid auth token and IP not allowed", status=401)
+
+
+def export_metrics(request):
+    return _export_metrics_response(request)
+
+
+def export_metrics_by_category(request, category):
+    return _export_metrics_response(request, category=category)

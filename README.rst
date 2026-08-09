@@ -48,10 +48,7 @@ and send requests to `/metrics` to Aetos in your `urls.py`:
         # ... your other patterns ...
     ]
 
-Then, add your own metrics by listening for the `collect_metrics` signal.
-Refer to `the django docs <https://docs.djangoproject.com/en/dev/topics/signals/>`_
-on details how to do this.
-
+Then, add your own metrics using the `@metric_collector` decorator.
 Your signal handler can return multiple metrics, each represented as a dict
 within a list of generator.
 
@@ -59,12 +56,10 @@ Your `src/app/signals.py`:
 
 .. code-block:: python
 
-    from django.dispatch import receiver
-
-    from django_aetos.signals import collect_metrics
+    from django_aetos.signals import metric_collector
 
 
-    @receiver(collect_metrics, dispatch_uid='metric_universes_count')
+    @metric_collector(category="cheap")
     def metric_universes_count(sender, **kwargs):
         yield {
             "name": "universes_count",
@@ -73,8 +68,52 @@ Your `src/app/signals.py`:
             "value": 1,
         }
 
+
+    @metric_collector(category="expensive")
+    def metric_complex_calculation(sender, **kwargs):
+        yield {
+            "name": "complex_metric",
+            "help": "An expensive calculation",
+            "type": "gauge",
+            "value": some_expensive_database_query(),
+        }
+
 You can do anything you like here, like make database queries or look at files
 in the filesystem.
+
+**Multiple Metric Endpoints**
+
+Metrics are organized by category. You can scrape different categories at different intervals:
+
+- `/metrics` - Returns ALL metrics (all categories combined)
+- `/metrics/cheap` - Returns only metrics tagged with `category="cheap"`
+- `/metrics/expensive` - Returns only metrics tagged with `category="expensive"`
+
+This allows you to scrape cheap metrics frequently and expensive metrics less often.
+
+Categories are arbitrary strings - use any names that make sense for your use case
+(e.g., "fast", "slow", "realtime", "daily", etc.).
+
+**Legacy Pattern**
+
+The old signal-based pattern still works for backward compatibility:
+
+.. code-block:: python
+
+    from django.dispatch import receiver
+    from django_aetos.signals import collect_metrics
+
+
+    @receiver(collect_metrics, dispatch_uid='metric_legacy')
+    def metric_legacy(sender, **kwargs):
+        yield {
+            "name": "legacy_metric",
+            "help": "Using the old pattern",
+            "type": "counter",
+            "value": 42,
+        }
+
+Metrics registered this way appear on `/metrics` but not on category-specific endpoints.
 
 To make sure your receiver actually connects, add an import to your
 `src/app/apps.py`:
