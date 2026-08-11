@@ -34,8 +34,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/uberspace/django-aetos"
-Issues = "https://github.com/uberspace/django-aetos/issues"
+Homepage = "https://github.com/uberspace/django_aetos"
+Issues = "https://github.com/uberspace/django_aetos/issues"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "example_project.settings"
